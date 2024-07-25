@@ -1,5 +1,4 @@
-import { Metadata } from 'next';
-import * as React from 'react';
+import type { Metadata } from 'next';
 import { RiAlarmWarningFill } from 'react-icons/ri';
 
 export const metadata: Metadata = {

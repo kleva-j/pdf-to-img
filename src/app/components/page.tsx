@@ -9,7 +9,7 @@ import {
   Plus,
   Shield,
 } from 'lucide-react';
-import React from 'react';
+import { useState } from 'react';
 
 import Button from '@/components/buttons/Button';
 import IconButton from '@/components/buttons/IconButton';
@@ -25,8 +25,8 @@ import Skeleton from '@/components/Skeleton';
 type Color = (typeof colorList)[number];
 
 export default function ComponentPage() {
-  const [mode, setMode] = React.useState<'dark' | 'light'>('light');
-  const [color, setColor] = React.useState<Color>('sky');
+  const [mode, setMode] = useState<'dark' | 'light'>('light');
+  const [color, setColor] = useState<Color>('sky');
   function toggleMode() {
     return mode === 'dark' ? setMode('light') : setMode('dark');
   }

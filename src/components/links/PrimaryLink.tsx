@@ -1,4 +1,4 @@
-import * as React from 'react';
+import { forwardRef } from 'react';
 
 import { cn } from '@/lib/utils';
 
@@ -11,7 +11,7 @@ type PrimaryLinkProps = {
   variant?: (typeof PrimaryLinkVariant)[number];
 } & UnstyledLinkProps;
 
-const PrimaryLink = React.forwardRef<HTMLAnchorElement, PrimaryLinkProps>(
+const PrimaryLink = forwardRef<HTMLAnchorElement, PrimaryLinkProps>(
   ({ className, children, variant = 'primary', ...rest }, ref) => {
     return (
       <UnstyledLink

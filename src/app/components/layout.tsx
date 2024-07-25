@@ -1,5 +1,5 @@
-import { Metadata } from 'next';
-import * as React from 'react';
+import type { Metadata } from 'next';
+import type { PropsWithChildren, ReactElement } from 'react';
 
 import '@/styles/colors.css';
 
@@ -8,10 +8,6 @@ export const metadata: Metadata = {
   description: 'Pre-built components with awesome default',
 };
 
-export default function ComponentsLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function Layout({ children }: PropsWithChildren): ReactElement {
   return <>{children}</>;
 }

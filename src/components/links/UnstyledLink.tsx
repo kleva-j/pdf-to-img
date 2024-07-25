@@ -1,5 +1,5 @@
-import Link, { LinkProps } from 'next/link';
-import * as React from 'react';
+import Link, { type LinkProps } from 'next/link';
+import { forwardRef } from 'react';
 
 import { cn } from '@/lib/utils';
 
@@ -11,7 +11,7 @@ export type UnstyledLinkProps = {
   nextLinkProps?: Omit<LinkProps, 'href'>;
 } & React.ComponentPropsWithRef<'a'>;
 
-const UnstyledLink = React.forwardRef<HTMLAnchorElement, UnstyledLinkProps>(
+const UnstyledLink = forwardRef<HTMLAnchorElement, UnstyledLinkProps>(
   ({ children, href, openNewTab, className, nextLinkProps, ...rest }, ref) => {
     const isNewTab =
       openNewTab !== undefined

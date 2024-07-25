@@ -1,5 +1,5 @@
 import { LucideIcon } from 'lucide-react';
-import * as React from 'react';
+import { forwardRef } from 'react';
 import { IconType } from 'react-icons';
 
 import { cn } from '@/lib/utils';
@@ -25,7 +25,7 @@ type IconLinkProps = {
   };
 } & Omit<UnstyledLinkProps, 'children'>;
 
-const IconLink = React.forwardRef<HTMLAnchorElement, IconLinkProps>(
+const IconLink = forwardRef<HTMLAnchorElement, IconLinkProps>(
   (
     {
       className,

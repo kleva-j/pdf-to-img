@@ -1,8 +1,8 @@
-import * as React from 'react';
+import type { ComponentPropsWithoutRef } from 'react';
 
 import { cn } from '@/lib/utils';
 
-type SkeletonProps = React.ComponentPropsWithoutRef<'div'>;
+type SkeletonProps = ComponentPropsWithoutRef<'div'>;
 
 export default function Skeleton({ className, ...rest }: SkeletonProps) {
   return (

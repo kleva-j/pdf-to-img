@@ -1,5 +1,5 @@
-import { Metadata } from 'next';
-import * as React from 'react';
+import type { Metadata } from 'next';
+import type { PropsWithChildren, ReactElement } from 'react';
 
 import '@/styles/globals.css';
 // !STARTERCONF This is for demo purposes, remove @/styles/colors.css import immediately
@@ -7,8 +7,6 @@ import '@/styles/colors.css';
 
 import { siteConfig } from '@/constant/config';
 
-// !STARTERCONF Change these default meta
-// !STARTERCONF Look at @/constant/config to change them
 export const metadata: Metadata = {
   metadataBase: new URL(siteConfig.url),
   title: {
@@ -32,7 +30,7 @@ export const metadata: Metadata = {
     siteName: siteConfig.title,
     images: [`${siteConfig.url}/images/og.jpg`],
     type: 'website',
-    locale: 'en_US',
+    locale: 'en_GB',
   },
   twitter: {
     card: 'summary_large_image',
@@ -41,22 +39,18 @@ export const metadata: Metadata = {
     images: [`${siteConfig.url}/images/og.jpg`],
     // creator: '@th_clarence',
   },
-  // authors: [
-  //   {
-  //     name: 'Theodorus Clarence',
-  //     url: 'https://theodorusclarence.com',
-  //   },
-  // ],
+  authors: [
+    {
+      name: 'Michael Obasi',
+      url: 'https://michaelobasi.dev/portfolio_v3/',
+    },
+  ],
 };
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function RootLayout(props: PropsWithChildren): ReactElement {
   return (
     <html>
-      <body>{children}</body>
+      <body>{props.children}</body>
     </html>
   );
 }
