@@ -4,6 +4,7 @@ import type { PropsWithChildren, ReactElement } from 'react';
 import '@/styles/globals.css';
 
 import { ThemeProvider } from '@/components/theme-provider';
+import { Toaster } from '@/components/ui/sonner';
 
 import { siteConfig } from '@/constant/config';
 
@@ -59,6 +60,7 @@ export default function RootLayout(props: PropsWithChildren): ReactElement {
         >
           {props.children}
         </ThemeProvider>
+        <Toaster />
       </body>
     </html>
   );
