@@ -1,5 +1,5 @@
+import { Siren } from 'lucide-react';
 import type { Metadata } from 'next';
-import { RiAlarmWarningFill } from 'react-icons/ri';
 
 export const metadata: Metadata = {
   title: 'Not Found',
@@ -10,7 +10,7 @@ export default function NotFound() {
     <main>
       <section className='bg-white'>
         <div className='layout flex min-h-screen flex-col items-center justify-center text-center text-black'>
-          <RiAlarmWarningFill
+          <Siren
             size={60}
             className='drop-shadow-glow animate-flicker text-red-500'
           />
