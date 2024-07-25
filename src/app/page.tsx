@@ -9,7 +9,9 @@ export default function HomePage() {
     <main>
       <section className='bg-white'>
         <div className='layout relative flex min-h-screen flex-col items-center justify-center py-12 text-center'>
-          <h2 className='font-semibold'>PDf to IMG converter</h2>
+          <h2 className='font-semibold text-xl lg:text-2xl'>
+            PDf to IMG converter
+          </h2>
           <footer className='absolute bottom-2 text-gray-700 text-sm'>
             © {new Date().getFullYear()} By{' '}
             <UnderlineLink href='https://michaelobasi.dev?ref=tsnextstarter'>
