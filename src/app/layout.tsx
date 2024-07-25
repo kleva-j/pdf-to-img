@@ -3,6 +3,8 @@ import type { PropsWithChildren, ReactElement } from 'react';
 
 import '@/styles/globals.css';
 
+import { ThemeProvider } from '@/components/theme-provider';
+
 import { siteConfig } from '@/constant/config';
 
 export const metadata: Metadata = {
@@ -47,8 +49,17 @@ export const metadata: Metadata = {
 
 export default function RootLayout(props: PropsWithChildren): ReactElement {
   return (
-    <html>
-      <body>{props.children}</body>
+    <html lang='en' suppressHydrationWarning>
+      <body>
+        <ThemeProvider
+          attribute='class'
+          defaultTheme='system'
+          enableSystem
+          disableTransitionOnChange
+        >
+          {props.children}
+        </ThemeProvider>
+      </body>
     </html>
   );
 }
