@@ -1,10 +1,20 @@
-import type { Metadata } from 'next';
-import type { PropsWithChildren, ReactElement } from 'react';
+import { GeistMono } from 'geist/font/mono';
+import { GeistSans } from 'geist/font/sans';
+import type { Metadata, Viewport } from 'next';
+import type { PropsWithChildren } from 'react';
 
 import '@/styles/globals.css';
 
+import { cn } from '@/lib/utils';
+
+// Layouts
+import { Footer } from '@/components/layouts/footer';
+import { Header } from '@/components/layouts/header';
+// Providers
 import { ThemeProvider } from '@/components/theme-provider';
+// UI components
 import { Toaster } from '@/components/ui/sonner';
+import { TooltipProvider } from '@/components/ui/tooltip';
 
 import { siteConfig } from '@/constant/config';
 
@@ -33,6 +43,7 @@ export const metadata: Metadata = {
     type: 'website',
     locale: 'en_GB',
   },
+  creator: 'kleva-j',
   twitter: {
     card: 'summary_large_image',
     title: siteConfig.title,
@@ -48,17 +59,38 @@ export const metadata: Metadata = {
   ],
 };
 
-export default function RootLayout(props: PropsWithChildren): ReactElement {
+export const viewport: Viewport = {
+  colorScheme: 'dark light',
+  themeColor: [
+    { media: '(prefers-color-scheme: light)', color: 'white' },
+    { media: '(prefers-color-scheme: dark)', color: 'black' },
+  ],
+};
+
+export default function RootLayout({ children }: PropsWithChildren) {
   return (
     <html lang='en' suppressHydrationWarning>
-      <body>
+      <head />
+      <body
+        className={cn(
+          'min-h-screen font-sans antialiased',
+          GeistSans.variable,
+          GeistMono.variable
+        )}
+      >
         <ThemeProvider
           attribute='class'
           defaultTheme='system'
           enableSystem
           disableTransitionOnChange
         >
-          {props.children}
+          <TooltipProvider>
+            <div className='relative dark:bg-slate-950 flex min-h-screen flex-col'>
+              <Header />
+              <main className='flex-1'>{children}</main>
+              <Footer />
+            </div>
+          </TooltipProvider>
         </ThemeProvider>
         <Toaster />
       </body>
