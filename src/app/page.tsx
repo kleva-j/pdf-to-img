@@ -1,25 +1,26 @@
-import '@/lib/env';
+'use client';
 
-import UnderlineLink from '@/components/links/UnderlineLink';
+import { useUploadFile } from '@/hooks/use-upload-file';
 
-// import Logo from '~/svg/Logo.svg';
+import { FileUploader } from '@/components/file-uploader';
+
+import { UploadedFilesCard } from '@/app/_components/file-cards';
 
 export default function HomePage() {
+  const { uploadFiles, progresses, uploadedFiles, isUploading } =
+    useUploadFile('pdfUploader');
+
   return (
-    <main>
-      <section className='bg-white'>
-        <div className='layout relative flex min-h-screen flex-col items-center justify-center py-12 text-center'>
-          <h2 className='font-semibold text-xl lg:text-2xl'>
-            PDf to IMG converter
-          </h2>
-          <footer className='absolute bottom-2 text-gray-700 text-sm'>
-            © {new Date().getFullYear()} By{' '}
-            <UnderlineLink href='https://michaelobasi.dev?ref=tsnextstarter'>
-              Michael Obasi
-            </UnderlineLink>
-          </footer>
-        </div>
-      </section>
-    </main>
+    <div className='max-w-xl space-y-6 px-4 mx-auto my-6 sm:my-12 md:my-16 lg:my-20'>
+      <FileUploader
+        maxFiles={3}
+        maxSize={10 * 1024 * 1024}
+        progresses={progresses}
+        onUpload={uploadFiles}
+        disabled={isUploading}
+        multiple
+      />
+      <UploadedFilesCard uploadedFiles={uploadedFiles} />
+    </div>
   );
 }

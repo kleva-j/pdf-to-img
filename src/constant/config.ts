@@ -1,4 +1,5 @@
 export const siteConfig = {
+  name: 'PDF Converter',
   title: 'PDF to Image Converter',
   description:
     'A simple PDF to Image converter with Next.js and React. Convert PDF to PNG, JPG, SVG, and more.',
@@ -9,5 +10,8 @@ export const siteConfig = {
     url: 'https://michaelobasi.dev',
     email: 'kasmickleva@gmail.com',
     github: 'https://github.com/kleva-j',
+  },
+  links: {
+    github: 'https://github.com/kleva-j/pdf-to-img',
   },
 };
