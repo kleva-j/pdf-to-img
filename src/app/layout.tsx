@@ -1,9 +1,13 @@
-import type { Metadata } from 'next';
-import type { PropsWithChildren, ReactElement } from 'react';
+import type { Metadata, Viewport } from 'next';
+import type { PropsWithChildren } from 'react';
 
 import '@/styles/globals.css';
 
+import { Footer } from '@/components/layout/footer';
+import { Header } from '@/components/layout/header';
 import { ThemeProvider } from '@/components/theme-provider';
+import { Toaster } from '@/components/ui/sonner';
+import { TooltipProvider } from '@/components/ui/tooltip';
 
 import { siteConfig } from '@/constant/config';
 
@@ -32,6 +36,7 @@ export const metadata: Metadata = {
     type: 'website',
     locale: 'en_GB',
   },
+  creator: '@kleva-j',
   twitter: {
     card: 'summary_large_image',
     title: siteConfig.title,
@@ -47,7 +52,15 @@ export const metadata: Metadata = {
   ],
 };
 
-export default function RootLayout(props: PropsWithChildren): ReactElement {
+export const viewport: Viewport = {
+  colorScheme: 'dark light',
+  themeColor: [
+    { media: '(prefers-color-scheme: light)', color: 'white' },
+    { media: '(prefers-color-scheme: dark)', color: 'black' },
+  ],
+};
+
+export default function RootLayout({ children }: PropsWithChildren) {
   return (
     <html lang='en' suppressHydrationWarning>
       <body>
@@ -57,7 +70,14 @@ export default function RootLayout(props: PropsWithChildren): ReactElement {
           enableSystem
           disableTransitionOnChange
         >
-          {props.children}
+          <TooltipProvider>
+            <div className='relative dark:bg-slate-950 flex min-h-screen flex-col'>
+              <Header />
+              {children}
+              <Footer />
+            </div>
+          </TooltipProvider>
+          <Toaster />
         </ThemeProvider>
       </body>
     </html>
