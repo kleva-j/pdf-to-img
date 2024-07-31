@@ -7,9 +7,9 @@ import {
   FileUploaderItem,
   FileUploaderTrigger,
 } from '@/components/file-dropzone';
+import { Button } from '@/components/ui/button';
 
 import { uploadFiles } from '@/server-actions/upload';
-import { Button } from '@/ui/button';
 
 const formState = { message: '', status: '' };
 
