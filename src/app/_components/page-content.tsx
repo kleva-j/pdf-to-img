@@ -2,6 +2,10 @@
 
 import { useState } from 'react';
 
+import { ApiRouteForm } from '@/components/api-route/form';
+import { FormActions } from '@/components/server-action/form';
+import { UploadThingForm } from '@/components/uploadthing/form';
+
 import { Card, CardDescription, CardHeader, CardTitle } from '@/ui/card';
 import { ScrollArea, ScrollBar } from '@/ui/scroll-area';
 import { Tabs, TabsList, TabsTrigger } from '@/ui/tabs';
@@ -13,6 +17,7 @@ export const tabList = [
     tabTitle: 'With API Route',
     description:
       "Make changes to your API route here. Click save when you're done.",
+    component: ApiRouteForm,
   },
   {
     name: 'With UploadThing',
@@ -20,13 +25,15 @@ export const tabList = [
     tabTitle: 'With UploadThing',
     description:
       "Make changes to your UploadThing here. Click save when you're done.",
+    component: UploadThingForm,
   },
   {
     name: 'Using Server Action',
     value: 'server-action',
-    tabTitle: 'With Server Actions',
+    tabTitle: 'Using Server Actions',
     description:
       "Make changes to your Server Action here. Click save when you're done.",
+    component: FormActions,
   },
 ];
 
@@ -38,6 +45,7 @@ export const tabListMap = tabList.reduce(
 export const PageContent = () => {
   const [activeTab, setActiveTab] = useState('api-route');
   const tabContent = tabListMap[activeTab];
+  const CardContent = tabContent.component;
 
   return (
     <Tabs
@@ -64,6 +72,9 @@ export const PageContent = () => {
           <CardTitle>{tabContent.tabTitle}</CardTitle>
           <CardDescription>{tabContent.description}</CardDescription>
         </CardHeader>
+        <div className='px-6 pb-6'>
+          <CardContent />
+        </div>
       </Card>
     </Tabs>
   );

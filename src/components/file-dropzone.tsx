@@ -2,6 +2,7 @@
 
 import { Cross2Icon, UploadIcon } from '@radix-ui/react-icons';
 import { type VariantProps, cva } from 'class-variance-authority';
+import { FileIcon } from 'lucide-react';
 import Image from 'next/image';
 import {
   createContext,
@@ -85,7 +86,7 @@ const FileUploaderContext = createContext<FileUploaderContextProps | null>(
   null
 );
 
-function useFileUploader() {
+export function useFileUploader() {
   const context = useContext(FileUploaderContext);
 
   if (!context) {
@@ -301,32 +302,24 @@ const FileUploaderTrigger = forwardRef<
       {...props}
       {...getRootProps()}
     >
-      <Input type='file' {...getInputProps()} />
+      <Input type='file' name='file' {...getInputProps()} />
       {isDragActive ? (
         <div className='flex flex-col items-center justify-center gap-4 sm:px-5'>
           <div className='rounded-full border border-dashed p-3'>
-            <UploadIcon
-              className='size-7 text-muted-foreground'
-              aria-hidden='true'
-            />
+            <UploadIcon className='size-7 text-slate-600' aria-hidden='true' />
           </div>
-          <p className='font-medium text-muted-foreground'>
-            Drop the files here
-          </p>
+          <p className='font-medium text-slate-600'>Drop the files here</p>
         </div>
       ) : (
         <div className='flex flex-col items-center justify-center gap-4 sm:px-5'>
           <div className='rounded-full border border-dashed p-3'>
-            <UploadIcon
-              className='size-7 text-muted-foreground'
-              aria-hidden='true'
-            />
+            <UploadIcon className='size-7 text-slate-600' aria-hidden='true' />
           </div>
           <div className='space-y-px'>
-            <p className='font-medium text-muted-foreground'>
+            <p className='font-medium text-slate-600'>
               Drag {`'n'`} drop files here, or click to select files
             </p>
-            <p className='text-sm text-muted-foreground/70'>
+            <p className='text-sm text-slate-600/70'>
               You can upload
               {maxFiles > 1
                 ? ` ${maxFiles === Infinity ? 'multiple' : maxFiles}
@@ -358,8 +351,10 @@ const FileUploaderItem = forwardRef<HTMLDivElement, FileUploaderItemProps>(
         className={cn('relative flex items-center space-x-4', className)}
         {...props}
       >
-        <div className='flex flex-1 space-x-4'>
-          {isFileWithPreview(file) ? (
+        <div className='flex flex-1 space-x-2'>
+          {file.type.startsWith('application') ? (
+            <FileIcon className='size-8 text-slate-600 stroke-[1px]' />
+          ) : isFileWithPreview(file) ? (
             <Image
               src={file.preview}
               alt={file.name}
@@ -374,9 +369,7 @@ const FileUploaderItem = forwardRef<HTMLDivElement, FileUploaderItemProps>(
               <p className='line-clamp-1 text-sm font-medium text-foreground/80'>
                 {file.name}
               </p>
-              <p className='text-xs text-muted-foreground'>
-                {formatBytes(file.size)}
-              </p>
+              <p className='text-xs text-slate-600'>{formatBytes(file.size)}</p>
             </div>
             {progress ? <Progress value={progress} /> : null}
           </div>
