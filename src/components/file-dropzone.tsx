@@ -251,7 +251,7 @@ const FileUploaderContent = forwardRef<
 });
 FileUploaderContent.displayName = 'FileUploaderContent';
 
-const fileUploaderInputVariants = cva(
+export const fileUploaderInputVariants = cva(
   'group relative cursor-pointer focus-visible:outline-none data-[disabled]:pointer-events-none data-[disabled]:opacity-50',
   {
     variants: {

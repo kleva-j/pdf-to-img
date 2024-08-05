@@ -3,8 +3,8 @@
 import { useState } from 'react';
 
 import { ApiRouteForm } from '@/components/api-route/form';
-import { FormActions } from '@/components/server-action/form';
-import { UploadThingForm } from '@/components/uploadthing/form';
+import { EdgeStoreForm } from '@/components/edgestore/form';
+import { Component } from '@/components/server-action/component';
 
 import { Card, CardDescription, CardHeader, CardTitle } from '@/ui/card';
 import { ScrollArea, ScrollBar } from '@/ui/scroll-area';
@@ -16,16 +16,16 @@ export const tabList = [
     value: 'api-route',
     tabTitle: 'With API Route',
     description:
-      "Make changes to your API route here. Click save when you're done.",
+      "Make changes to your API route handler here. Click save when you're done.",
     component: ApiRouteForm,
   },
   {
-    name: 'With UploadThing',
-    value: 'upload-thing',
-    tabTitle: 'With UploadThing',
+    name: 'With Edgestore',
+    value: 'edgestore',
+    tabTitle: 'With Edgestore',
     description:
-      "Make changes to your UploadThing here. Click save when you're done.",
-    component: UploadThingForm,
+      "Make changes to your Edgestore here. Click save when you're done.",
+    component: EdgeStoreForm,
   },
   {
     name: 'Using Server Action',
@@ -33,7 +33,7 @@ export const tabList = [
     tabTitle: 'Using Server Actions',
     description:
       "Make changes to your Server Action here. Click save when you're done.",
-    component: FormActions,
+    component: Component,
   },
 ];
 
