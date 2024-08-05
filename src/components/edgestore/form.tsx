@@ -10,14 +10,20 @@ import {
   FileUploaderItem,
   FileUploaderTrigger,
 } from '@/components/file-dropzone';
-import { Button } from '@/components/ui/button';
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormMessage,
+} from '@/components/ui/form';
 
 import { type Schema, formResolver } from '@/constant/data';
-import { Form, FormControl, FormField, FormItem, FormMessage } from '@/ui/form';
+import { Button } from '@/ui/button';
 
 const { log } = console;
 
-export const UploadThingForm = () => {
+export const EdgeStoreForm = () => {
   const [loading] = useState<boolean>(false);
 
   const form = useForm<Schema>({

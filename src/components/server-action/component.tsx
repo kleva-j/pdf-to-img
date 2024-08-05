@@ -1,5 +1,3 @@
-'use client';
-
 import { FileIcon, Loader2, UploadIcon, X as Close } from 'lucide-react';
 import { ChangeEvent, useEffect, useRef, useState } from 'react';
 import { useFormState, useFormStatus } from 'react-dom';
@@ -8,12 +6,12 @@ import { toast } from 'sonner';
 import { showErrorToast } from '@/lib/handle-error';
 import { cn, formatBytes } from '@/lib/utils';
 
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import { Progress } from '@/components/ui/progress';
 
 import { fileSchema, MAX_UPLOAD_SIZE } from '@/constant/data';
 import { uploadFiles } from '@/server-actions/upload';
-import { Button } from '@/ui/button';
-import { Input } from '@/ui/input';
 
 const formState = { message: '', status: '', data: null };
 
@@ -21,8 +19,8 @@ export function Component() {
   const { pending } = useFormStatus();
   const [state, formAction] = useFormState(uploadFiles, formState);
 
-  const [tempFile, setFile] = useState<File | null>(null); // Changed type from any to File
-  const [progress, setProgress] = useState<number>(0); // Added type annotation for progress
+  const [tempFile, setFile] = useState<File | null>(null);
+  const [progress, setProgress] = useState<number>(0);
 
   const { message, status } = state;
 
