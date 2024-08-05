@@ -1,8 +1,4 @@
-'use client';
-
-import { useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { toast } from 'sonner';
+import { type UseFormReturn, useForm } from 'react-hook-form';
 
 import {
   FileUploader,
@@ -15,25 +11,25 @@ import { Button } from '@/components/ui/button';
 import { type Schema, formResolver } from '@/constant/data';
 import { Form, FormControl, FormField, FormItem, FormMessage } from '@/ui/form';
 
-const { log } = console;
+type FormProps = {
+  loading: boolean;
+  onSubmit: (data: Schema, form: UseFormReturn<Schema>) => void;
+};
 
-export const UploadThingForm = () => {
-  const [loading] = useState<boolean>(false);
-
+export const UploadFileForm = ({ loading, onSubmit }: FormProps) => {
   const form = useForm<Schema>({
     resolver: formResolver,
     defaultValues: { file: [] },
   });
 
-  const onSubmit = (data: Schema) => {
-    log(data);
-    toast.success("You've successfully uploaded your files!");
+  const handleSubmit = (data: Schema) => {
+    onSubmit(data, form);
   };
 
   return (
     <Form {...form}>
       <form
-        onSubmit={form.handleSubmit(onSubmit)}
+        onSubmit={form.handleSubmit(handleSubmit)}
         className='flex w-full flex-col gap-4'
       >
         <FormField

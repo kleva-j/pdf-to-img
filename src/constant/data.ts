@@ -2,11 +2,12 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { icons } from 'lucide-react';
 import { z } from 'zod';
 
-const MAX_UPLOAD_SIZE = 1024 * 1024 * 5; // 5MB
-const ACCEPTED_FILE_TYPES = ['application/pdf'];
+export const MAX_UPLOAD_SIZE = 1024 * 1024 * 5; // 5MB
+export const ACCEPTED_FILE_TYPES = ['application/pdf'];
 
-export const fileSchema = z
-  .any()
+const baseSchema = typeof window === 'undefined' ? z.any() : z.instanceof(File);
+
+export const fileSchema = baseSchema
   .refine((file) => !file || (!!file && file.size <= MAX_UPLOAD_SIZE), {
     message: 'The File must be a maximum of 5MB.',
   })

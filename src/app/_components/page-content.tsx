@@ -3,7 +3,7 @@
 import { useState } from 'react';
 
 import { ApiRouteForm } from '@/components/api-route/form';
-import { FormActions } from '@/components/server-action/form';
+import { Component } from '@/components/server-action/component';
 import { UploadThingForm } from '@/components/uploadthing/form';
 
 import { Card, CardDescription, CardHeader, CardTitle } from '@/ui/card';
@@ -16,7 +16,7 @@ export const tabList = [
     value: 'api-route',
     tabTitle: 'With API Route',
     description:
-      "Make changes to your API route here. Click save when you're done.",
+      "Make changes to your API route handler here. Click save when you're done.",
     component: ApiRouteForm,
   },
   {
@@ -33,7 +33,7 @@ export const tabList = [
     tabTitle: 'Using Server Actions',
     description:
       "Make changes to your Server Action here. Click save when you're done.",
-    component: FormActions,
+    component: Component,
   },
 ];
 

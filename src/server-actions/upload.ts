@@ -1,28 +1,37 @@
 'use server';
 
 import { revalidatePath } from 'next/cache';
+import { UploadThingError } from 'uploadthing/server';
 
-// import { writeFile } from 'node:fs/promises';
+import { getErrorMessage } from '@/lib/handle-error';
+
 import { fileSchema } from '@/constant/data';
+import { utapi } from '@/server/uploadthing';
+
+const { log } = console;
 
 export async function uploadFiles(_: unknown, formData: FormData) {
   try {
     const file = formData.get('file') as File;
 
+    log({ file, entries: Array.from(formData.values()) });
+
     if (!file) return { message: 'No file provided', status: 'error' }; // Check for null
 
-    const parse = fileSchema.safeParse({ file });
+    const parse = fileSchema.safeParse(file);
 
-    if (!parse.success) return { message: 'Failed to upload file(s)' };
+    log({ data: parse.data, file });
 
-    // const buffer = await file.arrayBuffer();
+    if (!parse.success) {
+      return { message: getErrorMessage(parse.error), status: 'error' };
+    }
 
-    // const fileBuffer = Buffer.from(buffer);
+    const { data, error } = await utapi.uploadFiles(file);
 
-    // await writeFile(file.name, fileBuffer);
+    if (error) throw new UploadThingError(error);
 
     revalidatePath('/');
-    return { message: 'File uploaded successfully', status: 'success' };
+    return { message: 'File uploaded successfully', url: data.url };
   } catch (e) {
     return { message: 'Error uploading file(s)', status: 'error' };
   }

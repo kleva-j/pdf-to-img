@@ -17,7 +17,7 @@ export function cn(...inputs: ClassValue[]) {
  * @returns The formatted string representation of the number of bytes.
  */
 export function formatBytes(
-  bytes: number,
+  bytes: number, //example: 5242880
   opts: {
     decimals?: number;
     sizeType?: 'accurate' | 'normal';
@@ -53,4 +53,15 @@ export function generateUserId(length = 16): string {
  */
 export function generateSessionId(): string {
   return faker.string.uuid();
+}
+
+/**
+ * Delays the execution of the Promise by the specified number of milliseconds.
+ * @param ms - The number of milliseconds to delay. Must be a non-negative integer.
+ * @returns A Promise that resolves after the specified number of milliseconds.
+ */
+export function delay(ms: number): Promise<void> {
+  return new Promise<void>((resolve): void => {
+    setTimeout(resolve, ms);
+  });
 }
