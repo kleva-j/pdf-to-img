@@ -5,6 +5,9 @@ import { revalidatePath } from 'next/cache';
 import { getErrorMessage } from '@/lib/handle-error';
 
 import { fileSchema } from '@/constant/data';
+import { backendClient } from '@/server/edgestore';
+
+const { log } = console;
 
 export async function uploadFiles(_: unknown, formData: FormData) {
   try {
@@ -18,9 +21,23 @@ export async function uploadFiles(_: unknown, formData: FormData) {
       return { message: getErrorMessage(parse.error), status: 'error' };
     }
 
+    const blob = new Blob([parse.data], { type: file.type });
+    const extension = file.name.split('.').pop() as string;
+
+    const res = await backendClient.publicFiles.upload({
+      content: { blob, extension },
+      options: { temporary: true },
+    });
+
     revalidatePath('/');
-    return { message: 'File uploaded successfully', url: '' };
+
+    return {
+      message: 'File uploaded successfully',
+      data: res,
+      status: 'success',
+    };
   } catch (e) {
-    return { message: 'Error uploading file(s)', status: 'error' };
+    log(e);
+    return { message: 'Error uploading file', status: 'error' };
   }
 }

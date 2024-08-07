@@ -1,6 +1,6 @@
 import { FileIcon, Loader2, UploadIcon, X as Close } from 'lucide-react';
 import { ChangeEvent, useEffect, useRef, useState } from 'react';
-import { useFormState, useFormStatus } from 'react-dom';
+import { useFormState } from 'react-dom';
 import { toast } from 'sonner';
 
 import { showErrorToast } from '@/lib/handle-error';
@@ -10,19 +10,20 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Progress } from '@/components/ui/progress';
 
+import type { UploadFileType } from '@/app/api/upload/route';
 import { fileSchema, MAX_UPLOAD_SIZE } from '@/constant/data';
 import { uploadFiles } from '@/server-actions/upload';
 
-const formState = { message: '', status: '', data: null };
+const formState = { message: '', status: '', data: {} as UploadFileType };
 
 export function Component() {
-  const { pending } = useFormStatus();
+  const [loading, setLoading] = useState<boolean>(false);
   const [state, formAction] = useFormState(uploadFiles, formState);
 
   const [tempFile, setFile] = useState<File | null>(null);
   const [progress, setProgress] = useState<number>(0);
 
-  const { message, status } = state;
+  const { message, status, data } = state;
 
   const handleChange = (e: Event | ChangeEvent<HTMLInputElement>) => {
     const files = (e.target as HTMLInputElement).files;
@@ -46,10 +47,11 @@ export function Component() {
   };
 
   useEffect(() => {
-    if (status === 'success') {
+    if (status) {
+      setLoading(false);
       setProgress(100);
     }
-  }, [status]);
+  }, [status, data]);
 
   return (
     <form action={formAction} className='flex flex-col gap-4'>
@@ -61,7 +63,6 @@ export function Component() {
         multiple={false}
         id='file-upload'
         className='hidden peer'
-        disabled={pending}
         onChange={handleChange}
         ref={inputRef}
       />
@@ -131,9 +132,13 @@ export function Component() {
         )}
       </div>
 
-      <Button type='submit' disabled={pending} className='w-fit'>
-        {pending && <Loader2 className='mr-2 h-4 w-4 animate-spin' />}
-        {pending ? 'uploading...' : 'Upload'}
+      <Button
+        type='submit'
+        disabled={loading || tempFile === null}
+        className='w-fit'
+      >
+        {loading && <Loader2 className='mr-2 h-4 w-4 animate-spin' />}
+        {loading ? 'uploading...' : 'Upload'}
       </Button>
     </form>
   );

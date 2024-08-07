@@ -8,10 +8,10 @@ export const env = createEnv({
    */
   server: {
     NODE_ENV: z.enum(['development', 'test', 'production']),
-    UPLOADTHING_SECRET: z.string().min(1),
-    UPLOADTHING_APP_ID: z.string().min(1),
     UPSTASH_REDIS_REST_URL: z.string().url(),
     UPSTASH_REDIS_REST_TOKEN: z.string().min(1),
+    EDGE_STORE_ACCESS_KEY: z.string().min(1),
+    EDGE_STORE_SECRET_KEY: z.string().min(1),
     SHOW_LOGGER: z.enum(['yes', 'no']),
   },
 
@@ -32,10 +32,10 @@ export const env = createEnv({
     NODE_ENV: process.env.NODE_ENV,
     SHOW_LOGGER: process.env.SHOW_LOGGER,
     NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL,
-    UPLOADTHING_SECRET: process.env.UPLOADTHING_SECRET,
-    UPLOADTHING_APP_ID: process.env.UPLOADTHING_APP_ID,
     UPSTASH_REDIS_REST_URL: process.env.UPSTASH_REDIS_REST_URL,
     UPSTASH_REDIS_REST_TOKEN: process.env.UPSTASH_REDIS_REST_TOKEN,
+    EDGE_STORE_ACCESS_KEY: process.env.EDGE_STORE_ACCESS_KEY,
+    EDGE_STORE_SECRET_KEY: process.env.EDGE_STORE_SECRET_KEY,
   },
   /**
    * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation. This is especially

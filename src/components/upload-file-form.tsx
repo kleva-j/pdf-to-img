@@ -1,29 +1,55 @@
+import { Loader2 } from 'lucide-react';
+import { useState } from 'react';
 import { type UseFormReturn, useForm } from 'react-hook-form';
+import { toast } from 'sonner';
 
+import { FormStatus } from '@/components/api-route/form';
 import {
   FileUploader,
   FileUploaderContent,
   FileUploaderItem,
   FileUploaderTrigger,
 } from '@/components/file-dropzone';
-import { Button } from '@/components/ui/button';
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormMessage,
+} from '@/components/ui/form';
 
+import type { UploadFileResponseType } from '@/app/api/upload/route';
 import { type Schema, formResolver } from '@/constant/data';
-import { Form, FormControl, FormField, FormItem, FormMessage } from '@/ui/form';
+import { Button } from '@/ui/button';
+
+const { log } = console;
 
 type FormProps = {
-  loading: boolean;
-  onSubmit: (data: Schema, form: UseFormReturn<Schema>) => void;
+  status: FormStatus;
+  onSubmit: (
+    data: Schema,
+    form: UseFormReturn<Schema>
+  ) => Promise<UploadFileResponseType>;
 };
 
-export const UploadFileForm = ({ loading, onSubmit }: FormProps) => {
+export const UploadFileForm = ({ status, onSubmit }: FormProps) => {
+  const [progress, setProgress] = useState<number>(0);
+
   const form = useForm<Schema>({
     resolver: formResolver,
     defaultValues: { file: [] },
   });
 
   const handleSubmit = (data: Schema) => {
-    onSubmit(data, form);
+    toast.promise(onSubmit(data, form), {
+      loading: 'Uploading file...',
+      success: (data: UploadFileResponseType) => {
+        setProgress(100);
+        log(data);
+        return 'File uploaded successfully';
+      },
+      error: 'Failed to upload file',
+    });
   };
 
   return (
@@ -61,6 +87,7 @@ export const UploadFileForm = ({ loading, onSubmit }: FormProps) => {
                               key={file.name}
                               file={file}
                               index={index}
+                              progress={progress}
                             />
                           ))}
                         </FileUploaderContent>
@@ -75,9 +102,12 @@ export const UploadFileForm = ({ loading, onSubmit }: FormProps) => {
         />
         <Button
           className='w-fit'
-          disabled={loading || form.getValues().file.length === 0}
+          disabled={status === 'loading' || form.getValues().file.length === 0}
         >
-          Upload
+          {status === 'loading' && (
+            <Loader2 className='mr-2 h-4 w-4 animate-spin' />
+          )}
+          {status === 'loading' ? 'uploading...' : 'Upload'}
         </Button>
       </form>
     </Form>

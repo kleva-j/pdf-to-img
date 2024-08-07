@@ -3,13 +3,14 @@ import type { PropsWithChildren } from 'react';
 
 import '@/styles/globals.css';
 
-import { Footer } from '@/components/layout/footer';
-import { Header } from '@/components/layout/header';
-import { ThemeProvider } from '@/components/theme-provider';
-import { Toaster } from '@/components/ui/sonner';
-import { TooltipProvider } from '@/components/ui/tooltip';
+import { EdgeStoreProvider } from '@/lib/edgestore';
 
 import { siteConfig } from '@/constant/config';
+import { Footer } from '@/layout/footer';
+import { Header } from '@/layout/header';
+import { ThemeProvider } from '@/theme-provider';
+import { Toaster } from '@/ui/sonner';
+import { TooltipProvider } from '@/ui/tooltip';
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteConfig.url),
@@ -64,21 +65,23 @@ export default function RootLayout({ children }: PropsWithChildren) {
   return (
     <html lang='en' suppressHydrationWarning>
       <body>
-        <ThemeProvider
-          attribute='class'
-          defaultTheme='system'
-          enableSystem
-          disableTransitionOnChange
-        >
-          <TooltipProvider>
-            <div className='relative dark:bg-slate-950 flex min-h-screen flex-col'>
-              <Header />
-              {children}
-              <Footer />
-            </div>
-          </TooltipProvider>
-          <Toaster />
-        </ThemeProvider>
+        <EdgeStoreProvider>
+          <ThemeProvider
+            attribute='class'
+            defaultTheme='system'
+            enableSystem
+            disableTransitionOnChange
+          >
+            <TooltipProvider>
+              <div className='relative dark:bg-slate-950 flex min-h-screen flex-col'>
+                <Header />
+                {children}
+                <Footer />
+              </div>
+            </TooltipProvider>
+            <Toaster />
+          </ThemeProvider>
+        </EdgeStoreProvider>
       </body>
     </html>
   );

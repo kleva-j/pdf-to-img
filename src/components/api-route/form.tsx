@@ -1,36 +1,39 @@
 import { useState } from 'react';
 import type { UseFormReturn } from 'react-hook-form';
-import { toast } from 'sonner';
 
 import { UploadFileForm } from '@/components/upload-file-form';
 
 import type { Schema } from '@/constant/data';
 
-const { log } = console;
+export type FormStatus = 'pending' | 'loading' | 'done';
 
 export const ApiRouteForm = () => {
-  const [loading, setLoading] = useState<boolean>(false);
+  const [status, setStatus] = useState<FormStatus>('pending');
 
   const handleSubmit = async (data: Schema, form: UseFormReturn<Schema>) => {
-    setLoading(true);
+    setStatus('loading');
 
     const body = new FormData();
     body.append('file', data.file[0]);
 
-    const response = await fetch('/api/upload', { method: 'POST', body });
+    try {
+      const response = await fetch('/api/upload', { method: 'POST', body });
 
-    if (!response.ok) {
-      toast.error('Something went wrong, please try again later.');
-      setLoading(false);
+      if (!response.ok) {
+        throw new Error('Failed to upload file');
+      }
+
+      const uploadData = await response.json();
+
+      form.reset();
+
+      return uploadData;
+    } catch (error) {
+      throw new Error('Something went wrong, please try again later.');
+    } finally {
+      setStatus('done');
     }
-
-    const { status, data: fileData } = await response.json();
-    log({ status, fileData });
-
-    toast.success("You've successfully uploaded your files!");
-    setLoading(false);
-    form.reset();
   };
 
-  return <UploadFileForm loading={loading} onSubmit={handleSubmit} />;
+  return <UploadFileForm status={status} onSubmit={handleSubmit} />;
 };
