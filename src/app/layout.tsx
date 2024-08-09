@@ -1,9 +1,12 @@
+import { GeistMono } from 'geist/font/mono';
+import { GeistSans } from 'geist/font/sans';
 import type { Metadata, Viewport } from 'next';
 import type { PropsWithChildren } from 'react';
 
 import '@/styles/globals.css';
 
 import { EdgeStoreProvider } from '@/lib/edgestore';
+import { cn } from '@/lib/utils';
 
 import { siteConfig } from '@/constant/config';
 import { Footer } from '@/layout/footer';
@@ -64,7 +67,13 @@ export const viewport: Viewport = {
 export default function RootLayout({ children }: PropsWithChildren) {
   return (
     <html lang='en' suppressHydrationWarning>
-      <body>
+      <body
+        className={cn(
+          'min-h-screen font-sans antialiased',
+          GeistSans.variable,
+          GeistMono.variable
+        )}
+      >
         <EdgeStoreProvider>
           <ThemeProvider
             attribute='class'
