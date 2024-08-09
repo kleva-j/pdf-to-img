@@ -2,28 +2,42 @@
 
 import { revalidatePath } from 'next/cache';
 
-// import { writeFile } from 'node:fs/promises';
+import { getErrorMessage } from '@/lib/handle-error';
+
 import { fileSchema } from '@/constant/data';
+import { backendClient } from '@/server/edgestore';
+
+const { log } = console;
 
 export async function uploadFiles(_: unknown, formData: FormData) {
   try {
     const file = formData.get('file') as File;
 
-    if (!file) return { message: 'No file provided', status: 'error' }; // Check for null
+    if (!file) return { message: 'No file provided', status: 'error' };
 
-    const parse = fileSchema.safeParse({ file });
+    const parse = fileSchema.safeParse(file);
 
-    if (!parse.success) return { message: 'Failed to upload file(s)' };
+    if (!parse.success) {
+      return { message: getErrorMessage(parse.error), status: 'error' };
+    }
 
-    // const buffer = await file.arrayBuffer();
+    const blob = new Blob([parse.data], { type: file.type });
+    const extension = file.name.split('.').pop() as string;
 
-    // const fileBuffer = Buffer.from(buffer);
-
-    // await writeFile(file.name, fileBuffer);
+    const res = await backendClient.publicFiles.upload({
+      content: { blob, extension },
+      options: { temporary: true },
+    });
 
     revalidatePath('/');
-    return { message: 'File uploaded successfully', status: 'success' };
+
+    return {
+      message: 'File uploaded successfully',
+      data: res,
+      status: 'success',
+    };
   } catch (e) {
-    return { message: 'Error uploading file(s)', status: 'error' };
+    log(e);
+    return { message: 'Error uploading file', status: 'error' };
   }
 }

@@ -1,5 +1,8 @@
+import { Loader2 } from 'lucide-react';
 import { useState } from 'react';
 import { useFormState, useFormStatus } from 'react-dom';
+
+import { cn } from '@/lib/utils';
 
 import {
   FileUploader,
@@ -7,42 +10,56 @@ import {
   FileUploaderItem,
   FileUploaderTrigger,
 } from '@/components/file-dropzone';
+import { Button } from '@/components/ui/button';
 
+import { MAX_UPLOAD_SIZE } from '@/constant/data';
 import { uploadFiles } from '@/server-actions/upload';
-import { Button } from '@/ui/button';
 
-const formState = { message: '', status: '' };
+const formState = { message: '', status: '', data: null };
 
 export function FormActions() {
   const [files, setFiles] = useState<File[]>([]);
   const { pending } = useFormStatus();
 
-  const [, formAction] = useFormState(uploadFiles, formState);
+  const [state, formAction] = useFormState(uploadFiles, formState);
+
+  const { message, status } = state;
 
   return (
-    <FileUploader
-      value={files}
-      onValueChange={setFiles}
-      opts={{ maxSize: 1024 * 1024 * 5, accept: { 'application/pdf': [] } }}
-    >
-      <form action={formAction} className='flex flex-col gap-4'>
+    <form action={formAction}>
+      <FileUploader
+        value={files}
+        onValueChange={setFiles}
+        opts={{ maxSize: MAX_UPLOAD_SIZE, accept: { 'application/pdf': [] } }}
+        className='flex flex-col gap-4'
+      >
         <FileUploaderTrigger />
-        <FileUploaderContent>
-          <span className='mb-4 inline-block text-sm font-medium text-slate-600'>
+        <FileUploaderContent className='flex flex-col gap-2'>
+          <span className='inline-block text-sm font-medium text-slate-600'>
             Preview below.
           </span>
+          {message && (
+            <p
+              className={cn('text-sm text-slate-500', {
+                'text-red-500': status === 'error',
+              })}
+            >
+              {message}
+            </p>
+          )}
           {files.map((file, index) => (
             <FileUploaderItem key={file.name} file={file} index={index} />
           ))}
         </FileUploaderContent>
         <Button
           type='submit'
-          disabled={pending}
-          className='w-20 disabled:opacity-100'
+          disabled={pending || files.length === 0}
+          className='w-fit'
         >
+          {pending && <Loader2 className='mr-2 h-4 w-4 animate-spin' />}
           {pending ? 'uploading...' : 'Upload'}
         </Button>
-      </form>
-    </FileUploader>
+      </FileUploader>
+    </form>
   );
 }

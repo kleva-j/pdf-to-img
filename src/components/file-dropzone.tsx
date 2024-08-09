@@ -22,6 +22,7 @@ import { toast } from 'sonner';
 import { cn, formatBytes } from '@/lib/utils';
 import { useControllableState } from '@/hooks/use-controllable-state';
 
+import { Badge } from '@/ui/badge';
 import { Button } from '@/ui/button';
 import { Input } from '@/ui/input';
 import { Progress } from '@/ui/progress';
@@ -251,7 +252,7 @@ const FileUploaderContent = forwardRef<
 });
 FileUploaderContent.displayName = 'FileUploaderContent';
 
-const fileUploaderInputVariants = cva(
+export const fileUploaderInputVariants = cva(
   'group relative cursor-pointer focus-visible:outline-none data-[disabled]:pointer-events-none data-[disabled]:opacity-50',
   {
     variants: {
@@ -339,16 +340,29 @@ interface FileUploaderItemProps extends React.HTMLAttributes<HTMLDivElement> {
   file: File;
   index: number;
   progress?: number;
+  moreActions?: React.ReactNode;
+  abortUpload?: () => void;
 }
 
 const FileUploaderItem = forwardRef<HTMLDivElement, FileUploaderItemProps>(
-  ({ file, index, progress, className, ...props }, ref) => {
+  (
+    { file, index, progress, className, moreActions, abortUpload, ...props },
+    ref
+  ) => {
     const { onRemove } = useFileUploader();
+
+    const handleCancel = useCallback(() => {
+      onRemove(index);
+      if (progress !== undefined && progress > 0) {
+        // Check if progress is defined
+        abortUpload?.();
+      }
+    }, [index, onRemove, abortUpload, progress]);
 
     return (
       <div
         ref={ref}
-        className={cn('relative flex items-center space-x-4', className)}
+        className={cn('relative flex items-start space-x-4', className)}
         {...props}
       >
         <div className='flex flex-1 space-x-2'>
@@ -371,20 +385,32 @@ const FileUploaderItem = forwardRef<HTMLDivElement, FileUploaderItemProps>(
               </p>
               <p className='text-xs text-slate-600'>{formatBytes(file.size)}</p>
             </div>
-            {progress ? <Progress value={progress} /> : null}
+            {progress ? (
+              progress === 100 ? (
+                <Badge variant='success' className='w-max border-teal-100'>
+                  Uploaded
+                </Badge>
+              ) : (
+                <Progress value={progress} />
+              )
+            ) : null}
           </div>
         </div>
         <div className='flex items-center gap-2'>
-          <Button
-            type='button'
-            variant='outline'
-            size='icon'
-            className='size-7'
-            onClick={() => onRemove(index)}
-          >
-            <Cross2Icon className='size-4 ' aria-hidden='true' />
-            <span className='sr-only'>Remove file</span>
-          </Button>
+          {progress === 100 ? (
+            moreActions
+          ) : (
+            <Button
+              size='icon'
+              type='button'
+              variant='outline'
+              className='size-7'
+              onClick={handleCancel}
+            >
+              <Cross2Icon className='size-4 ' aria-hidden='true' />
+              <span className='sr-only'>Remove file</span>
+            </Button>
+          )}
         </div>
       </div>
     );

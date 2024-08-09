@@ -2,22 +2,24 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { icons } from 'lucide-react';
 import { z } from 'zod';
 
-const MAX_UPLOAD_SIZE = 1024 * 1024 * 3; // 3MB
-const ACCEPTED_FILE_TYPES = ['application/pdf'];
+export const MAX_UPLOAD_SIZE = 1024 * 1024 * 5; // 5MB
+export const ACCEPTED_FILE_TYPES = ['application/pdf'];
 
-export const fileSchema = z
-  .custom<FileList>()
-  .transform((file) => file.length > 0 && file.item(0))
+const baseSchema = typeof window === 'undefined' ? z.any() : z.instanceof(File);
+
+export const fileSchema = baseSchema
   .refine((file) => !file || (!!file && file.size <= MAX_UPLOAD_SIZE), {
-    message: 'The File must be a maximum of 3MB.',
+    message: 'The File must be a maximum of 5MB.',
   })
   .refine(
     (file) => !file || (!!file && ACCEPTED_FILE_TYPES.includes(file.type)),
-    { message: 'Only pdfs are allowed.' }
+    'Only pdfs are allowed.'
   );
 
-export type Schema = z.infer<typeof fileSchema>;
-export const formResolver = zodResolver(fileSchema);
+export const formSchema = z.object({ file: z.array(fileSchema) });
+
+export type Schema = z.infer<typeof formSchema>;
+export const formResolver = zodResolver(formSchema);
 
 export type status = 'success' | 'error';
 type alertType = {
