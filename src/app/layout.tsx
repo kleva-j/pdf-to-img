@@ -13,7 +13,6 @@ import { Footer } from '@/layout/footer';
 import { Header } from '@/layout/header';
 import { ThemeProvider } from '@/theme-provider';
 import { Toaster } from '@/ui/sonner';
-import { TooltipProvider } from '@/ui/tooltip';
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteConfig.url),
@@ -81,13 +80,12 @@ export default function RootLayout({ children }: PropsWithChildren) {
             enableSystem
             disableTransitionOnChange
           >
-            <TooltipProvider>
-              <div className='relative dark:bg-slate-950 flex min-h-screen flex-col'>
-                <Header />
-                {children}
-                <Footer />
-              </div>
-            </TooltipProvider>
+            <div className='relative dark:bg-slate-950 flex min-h-screen flex-col'>
+              <Header />
+              {children}
+              <Footer />
+            </div>
+
             <Toaster />
           </ThemeProvider>
         </EdgeStoreProvider>
