@@ -1,16 +1,18 @@
+import { GeistMono } from 'geist/font/mono';
+import { GeistSans } from 'geist/font/sans';
 import type { Metadata, Viewport } from 'next';
 import type { PropsWithChildren } from 'react';
 
 import '@/styles/globals.css';
 
 import { EdgeStoreProvider } from '@/lib/edgestore';
+import { cn } from '@/lib/utils';
 
 import { siteConfig } from '@/constant/config';
 import { Footer } from '@/layout/footer';
 import { Header } from '@/layout/header';
 import { ThemeProvider } from '@/theme-provider';
 import { Toaster } from '@/ui/sonner';
-import { TooltipProvider } from '@/ui/tooltip';
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteConfig.url),
@@ -64,7 +66,13 @@ export const viewport: Viewport = {
 export default function RootLayout({ children }: PropsWithChildren) {
   return (
     <html lang='en' suppressHydrationWarning>
-      <body>
+      <body
+        className={cn(
+          'min-h-screen font-sans antialiased',
+          GeistSans.variable,
+          GeistMono.variable
+        )}
+      >
         <EdgeStoreProvider>
           <ThemeProvider
             attribute='class'
@@ -72,13 +80,12 @@ export default function RootLayout({ children }: PropsWithChildren) {
             enableSystem
             disableTransitionOnChange
           >
-            <TooltipProvider>
-              <div className='relative dark:bg-slate-950 flex min-h-screen flex-col'>
-                <Header />
-                {children}
-                <Footer />
-              </div>
-            </TooltipProvider>
+            <div className='relative dark:bg-slate-950 flex min-h-screen flex-col'>
+              <Header />
+              {children}
+              <Footer />
+            </div>
+
             <Toaster />
           </ThemeProvider>
         </EdgeStoreProvider>

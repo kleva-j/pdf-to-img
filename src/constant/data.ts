@@ -5,6 +5,11 @@ import { z } from 'zod';
 export const MAX_UPLOAD_SIZE = 1024 * 1024 * 5; // 5MB
 export const ACCEPTED_FILE_TYPES = ['application/pdf'];
 
+export const uploaderOptions = {
+  maxSize: MAX_UPLOAD_SIZE,
+  accept: { 'application/pdf': [] },
+};
+
 const baseSchema = typeof window === 'undefined' ? z.any() : z.instanceof(File);
 
 export const fileSchema = baseSchema

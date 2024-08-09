@@ -1,7 +1,8 @@
 import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
+import { v1 as uuidv1 } from 'uuid';
 
-import { generateSessionId, generateUserId } from '@/lib/utils';
+import { nanoId } from '@/lib/utils';
 
 export function middleware(req: NextRequest) {
   const response = NextResponse.next();
@@ -11,12 +12,12 @@ export function middleware(req: NextRequest) {
 
   if (!req.cookies.has('uid')) {
     const config = { maxAge, expires, secure: true };
-    response.cookies.set('uid', generateUserId(), config);
+    response.cookies.set('uid', nanoId(16), config);
   }
 
   if (!req.cookies.has('sid')) {
     const config = { maxAge, expires, secure: true };
-    response.cookies.set('sid', generateSessionId(), config);
+    response.cookies.set('sid', uuidv1(), config);
   }
 
   return response;

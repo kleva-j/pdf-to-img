@@ -1,4 +1,3 @@
-import { faker } from '@faker-js/faker';
 import clsx, { ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 
@@ -39,23 +38,6 @@ export function formatBytes(
 }
 
 /**
- * Generates a random user ID using the nanoid algorithm.
- * @param length - The length of the user ID. Defaults to 16.
- * @returns A strongly typed random user ID in the form of a string.
- */
-export function generateUserId(length = 16): string {
-  return faker.string.nanoid(length);
-}
-
-/**
- * Generates a random session ID using the uuid v4 algorithm.
- * @returns A strong random session ID in the form of a UUID v4 string.
- */
-export function generateSessionId(): string {
-  return faker.string.uuid();
-}
-
-/**
  * Delays the execution of the Promise by the specified number of milliseconds.
  * @param ms - The number of milliseconds to delay. Must be a non-negative integer.
  * @returns A Promise that resolves after the specified number of milliseconds.
@@ -65,3 +47,40 @@ export function delay(ms: number): Promise<void> {
     setTimeout(resolve, ms);
   });
 }
+
+/**
+ * Extracts the timestamp from a UUID v1 string.
+ * @param uuid - The UUID v1 string from which to extract the timestamp.
+ * @returns The timestamp extracted from the UUID v1 string.
+ */
+export function extractTimestampFromUuidV1(uuid: string): number {
+  const uuidParts = uuid.split('-');
+  const timeString = `${uuidParts[2].substring(1)}${uuidParts[1]}${
+    uuidParts[0]
+  }`;
+  return parseInt(timeString, 16);
+}
+
+/**
+ * Generates a random ID of the specified size.
+ * @param size - The length of the ID to generate. Defaults to 21.
+ * @returns A string representing the generated random ID.
+ */
+export function generateRandomId(size = 21): string {
+  const generatedId: string[] = Array.from({ length: size }, () => {
+    const randomNumber: number = Math.floor(Math.random() * 62);
+    return randomNumber.toString(36).padStart(1, '0');
+  });
+
+  return generatedId.join('');
+}
+
+export const nanoId = (size = 21): string => {
+  const alphameric =
+    'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  let id = '';
+  for (let i = 0; i < size; i++) {
+    id += alphameric.charAt(Math.floor(Math.random() * alphameric.length));
+  }
+  return id;
+};

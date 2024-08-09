@@ -258,7 +258,7 @@ export const fileUploaderInputVariants = cva(
     variants: {
       variant: {
         default:
-          'grid h-52 w-full place-items-center rounded-lg border-2 border-dashed border-muted-foreground/25 px-5 py-2.5 text-center ring-offset-background transition hover:bg-muted/25 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 data-[state=active]:border-muted-foreground/50',
+          'grid h-52 w-full place-items-center rounded-lg border-2 border-dashed border-slate-300 dark:border-slate-700 border-muted-foreground/25 px-5 py-2.5 text-center ring-offset-background transition hover:bg-muted/25 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 data-[state=active]:border-muted-foreground/50',
         button:
           'inline-flex h-9 items-center justify-center gap-2 rounded-md bg-primary px-4 text-sm font-medium text-primary-foreground shadow hover:bg-primary/90',
         headless: '',
@@ -306,21 +306,21 @@ const FileUploaderTrigger = forwardRef<
       <Input type='file' name='file' {...getInputProps()} />
       {isDragActive ? (
         <div className='flex flex-col items-center justify-center gap-4 sm:px-5'>
-          <div className='rounded-full border border-dashed p-3'>
+          <div className='rounded-full border border-dashed dark:border-slate-600 p-3'>
             <UploadIcon className='size-7 text-slate-600' aria-hidden='true' />
           </div>
           <p className='font-medium text-slate-600'>Drop the files here</p>
         </div>
       ) : (
         <div className='flex flex-col items-center justify-center gap-4 sm:px-5'>
-          <div className='rounded-full border border-dashed p-3'>
+          <div className='rounded-full border border-dashed dark:border-slate-600 p-3'>
             <UploadIcon className='size-7 text-slate-600' aria-hidden='true' />
           </div>
           <div className='space-y-px'>
-            <p className='font-medium text-slate-600'>
+            <p className='font-medium text-slate-600 dark:text-slate-400'>
               Drag {`'n'`} drop files here, or click to select files
             </p>
-            <p className='text-sm text-slate-600/70'>
+            <p className='text-sm text-slate-600/70 dark:text-slate-400/70'>
               You can upload
               {maxFiles > 1
                 ? ` ${maxFiles === Infinity ? 'multiple' : maxFiles}
@@ -340,13 +340,13 @@ interface FileUploaderItemProps extends React.HTMLAttributes<HTMLDivElement> {
   file: File;
   index: number;
   progress?: number;
-  moreActions?: React.ReactNode;
   abortUpload?: () => void;
+  handleUpload?: (file: File) => Promise<void>;
 }
 
 const FileUploaderItem = forwardRef<HTMLDivElement, FileUploaderItemProps>(
   (
-    { file, index, progress, className, moreActions, abortUpload, ...props },
+    { file, index, progress, className, abortUpload, handleUpload, ...props },
     ref
   ) => {
     const { onRemove } = useFileUploader();
@@ -362,55 +362,72 @@ const FileUploaderItem = forwardRef<HTMLDivElement, FileUploaderItemProps>(
     return (
       <div
         ref={ref}
-        className={cn('relative flex items-start space-x-4', className)}
+        className={cn('relative flex items-center space-x-4', className)}
         {...props}
       >
         <div className='flex flex-1 space-x-2'>
-          {file.type.startsWith('application') ? (
-            <FileIcon className='size-8 text-slate-600 stroke-[1px]' />
-          ) : isFileWithPreview(file) ? (
-            <Image
-              src={file.preview}
-              alt={file.name}
-              width={48}
-              height={48}
-              loading='lazy'
-              className='aspect-square shrink-0 rounded-md object-cover'
-            />
-          ) : null}
-          <div className='flex w-full flex-col gap-2'>
-            <div className='space-y-px'>
-              <p className='line-clamp-1 text-sm font-medium text-foreground/80'>
-                {file.name}
-              </p>
-              <p className='text-xs text-slate-600'>{formatBytes(file.size)}</p>
-            </div>
-            {progress ? (
-              progress === 100 ? (
-                <Badge variant='success' className='w-max border-teal-100'>
-                  Uploaded
-                </Badge>
-              ) : (
-                <Progress value={progress} />
-              )
+          <div className='flex items-center justify-center gap-2'>
+            {file.type.startsWith('application') ? (
+              <FileIcon className='size-8 text-slate-600 dark:text-slate-400 stroke-[1px]' />
+            ) : isFileWithPreview(file) ? (
+              <Image
+                src={file.preview}
+                alt={file.name}
+                width={48}
+                height={48}
+                loading='lazy'
+                className='aspect-square shrink-0 rounded-md object-cover'
+              />
             ) : null}
           </div>
+          <div className='flex w-full flex-col gap-2'>
+            <div className='space-y-px'>
+              <p className='line-clamp-1 text-sm font-medium text-slate-700 dark:text-slate-300'>
+                {file.name}
+              </p>
+              <div className='flex items-center gap-x-2'>
+                <p className='text-xs text-slate-600 dark:text-slate-400 w-max text-nowrap'>
+                  {formatBytes(file.size)}
+                </p>
+                {progress ? (
+                  progress === 100 ? (
+                    <Badge variant='success' className='w-max border-teal-100'>
+                      Uploaded
+                    </Badge>
+                  ) : (
+                    <Progress
+                      className='h-1 bg-sky-900/20 dark:bg-sky-50/20'
+                      value={progress}
+                    />
+                  )
+                ) : null}
+              </div>
+            </div>
+          </div>
         </div>
-        <div className='flex items-center gap-2'>
-          {progress === 100 ? (
-            moreActions
-          ) : (
-            <Button
-              size='icon'
-              type='button'
-              variant='outline'
-              className='size-7'
-              onClick={handleCancel}
-            >
-              <Cross2Icon className='size-4 ' aria-hidden='true' />
-              <span className='sr-only'>Remove file</span>
-            </Button>
-          )}
+        <div className='flex items-center gap-x-3'>
+          <Button
+            size='icon'
+            type='button'
+            variant='destructive'
+            className='size-7'
+            onClick={handleCancel}
+          >
+            <Cross2Icon className='size-4' aria-hidden='true' />
+            <span className='sr-only'>Remove file</span>
+          </Button>
+
+          <Button
+            size='icon'
+            type='button'
+            className='size-7'
+            variant='outline'
+            disabled={progress !== undefined && progress > 0}
+            onClick={() => handleUpload?.(file)}
+          >
+            <UploadIcon className='size-4' aria-hidden='true' />
+            <span className='sr-only'>Upload file</span>
+          </Button>
         </div>
       </div>
     );

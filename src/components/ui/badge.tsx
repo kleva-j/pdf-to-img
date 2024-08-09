@@ -16,6 +16,11 @@ const badgeVariants = cva(
         outline: 'text-slate-950 dark:text-slate-50',
         success: 'text-green-500 dark:text-green-400',
       },
+      size: {
+        default: 'h-5 px-2.5 py-0.5',
+        sm: 'h-4 rounded-md px-1.5 text-xs',
+        lg: 'h-6 rounded-md px-3',
+      },
     },
     defaultVariants: {
       variant: 'default',

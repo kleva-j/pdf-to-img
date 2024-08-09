@@ -5,11 +5,17 @@ import {
   ACCEPTED_FILE_TYPES as accept,
   MAX_UPLOAD_SIZE as maxSize,
 } from '@/constant/data';
+import type { Context } from '@/server/context';
 
-const es = initEdgeStore.create();
+const es = initEdgeStore.context<Context>().create();
 
 export const edgeStoreRouter = es.router({
-  publicFiles: es.fileBucket({ maxSize, accept }),
+  publicFiles: es
+    .fileBucket({ maxSize, accept })
+    .path(({ ctx }) => [{ userId: ctx.userId }])
+    .beforeDelete(
+      ({ ctx, fileInfo }) => ctx.userId === fileInfo.metadata.userId
+    ),
 });
 
 export const backendClient = initEdgeStoreClient({ router: edgeStoreRouter });
