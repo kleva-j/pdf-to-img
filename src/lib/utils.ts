@@ -1,6 +1,9 @@
 import { faker } from '@faker-js/faker';
 import clsx, { ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
+import { v1 as uuidv1 } from 'uuid';
+
+import type { EdgeFileType } from '@/hooks/use-upload-file';
 
 /** Merge classes with tailwind-merge with clsx full feature */
 export function cn(...inputs: ClassValue[]) {
@@ -56,6 +59,14 @@ export function generateSessionId(): string {
 }
 
 /**
+ * Generates a random session ID using the uuid v1 algorithm.
+ * @returns A strongly typed random session ID in the form of a UUID v1 string.
+ */
+export function genSessionIdV1(): string {
+  return uuidv1() as string;
+}
+
+/**
  * Delays the execution of the Promise by the specified number of milliseconds.
  * @param ms - The number of milliseconds to delay. Must be a non-negative integer.
  * @returns A Promise that resolves after the specified number of milliseconds.
@@ -65,3 +76,60 @@ export function delay(ms: number): Promise<void> {
     setTimeout(resolve, ms);
   });
 }
+
+/**
+ * Generates an array of EdgeFileType objects with random values.
+ *
+ * @param len - The length of the array. Defaults to 2.
+ * @returns An array of EdgeFileType objects with random values.
+ */
+export function generateEdgeFiles(len = 2): EdgeFileType[] {
+  return Array.from({ length: len }).map(() => ({
+    url: faker.image.urlPlaceholder({ format: 'png' }),
+    size: faker.number.int({ min: 100, max: 1024 * 1024 * 5 }),
+    uploadedAt: faker.date.recent(),
+    metadata: {
+      name: faker.system.fileName(),
+      type: faker.system.mimeType(),
+    },
+    path: {},
+    pathOrder: [],
+  }));
+}
+
+/**
+ * Extracts the timestamp from a UUID v1 string.
+ * @param uuid - The UUID v1 string from which to extract the timestamp.
+ * @returns The timestamp extracted from the UUID v1 string.
+ */
+export function extractTimestampFromUuidV1(uuid: string): number {
+  const uuidParts = uuid.split('-');
+  const timeString = `${uuidParts[2].substring(1)}${uuidParts[1]}${
+    uuidParts[0]
+  }`;
+  return parseInt(timeString, 16);
+}
+
+/**
+ * Generates a random ID of the specified size.
+ * @param size - The length of the ID to generate. Defaults to 21.
+ * @returns A string representing the generated random ID.
+ */
+export function generateRandomId(size = 21): string {
+  const generatedId: string[] = Array.from({ length: size }, () => {
+    const randomNumber: number = Math.floor(Math.random() * 62);
+    return randomNumber.toString(36).padStart(1, '0');
+  });
+
+  return generatedId.join('');
+}
+
+export const generateRandomIdV2 = (size = 21): string => {
+  const alphameric =
+    'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  let id = '';
+  for (let i = 0; i < size; i++) {
+    id += alphameric.charAt(Math.floor(Math.random() * alphameric.length));
+  }
+  return id;
+};
